@@ -15,5 +15,5 @@
 
 ## Programa en ejecución
 
-![](img\01.png)
+![](img/01.png)
 
