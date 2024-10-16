@@ -94,7 +94,7 @@ El siguiente código base proporcionará un punto de partida para que cada grupo
 
 ## 9. Documentos de entrega
 
-
+[Especificaciones de la entrega](Presentacion_PowerPoint.md)
 
 > # **Nota final**
 
