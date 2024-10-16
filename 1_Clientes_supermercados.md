@@ -4,26 +4,26 @@
 
 ## Comandos ha utilizar
 
-- **school add <school_name>**: Agregar un nuevo colegio al sistema.
-- **school create_course <course_name>**: Crear un nuevo curso en el colegio.
-- **client add <client_name>**: Agregar un cliente (estudiante) al sistema.
-- **client enroll <client_name> <school_name>**: Inscribir a un cliente en un colegio específico.
-- **client leave <client_name>**: Permitir que un cliente abandone el colegio.
-- **school show_students <school_name>**: Mostrar la lista de estudiantes inscritos en el colegio.
-- **client join_enrollment_queue <client_name> <school_name> <course_name>**: Poner a un cliente en cola para inscribirse en un curso.
-- **school show_enrollment_queue <school_name> <course_name>**: Mostrar la lista de clientes en cola para inscribirse en un curso.
-- **school admit_from_queue <school_name> <course_name>**: Admitir al siguiente cliente en la cola para inscribirse en un curso.
-- **school show_courses <school_name>**: Mostrar la lista de cursos disponibles en el colegio.
-- **school remove_student <school_name> <client_name>**: Retirar a un cliente del colegio.
-- **client assist_course <course_name>**: Permitir que un cliente asista a un curso.
-- **school show_list**: Mostrar la lista de colegios en el sistema.
-- **client show_list**: Mostrar la lista de clientes en el sistema.
-- **school set_open_close <school_name> <open/close>**: Abrir / Cerrar el colegio, si no hay alumnos en clase.
-- **school add_exam <school_name> <course_name> <exam_name>**: Agregar un examen a un curso específico en el colegio.
-- **client take_exam <client_name> <course_name> <exam_name>**: Permitir que un cliente presente un examen de un curso en el que está inscrito.
-- **school grade_exam <school_name> <course_name> <client_name> <exam_name> <grade>**: Calificar un examen que un cliente ha presentado en un curso.
-- **school remove_exam <school_name> <course_name> <exam_name>**: Eliminar un examen de un curso si ningún cliente lo ha presentado.
-- **school show_exams <school_name> <course_name>**: Mostrar la lista de exámenes disponibles para un curso en el colegio.
+- **supermarket add <supermarket_name>**: Agregar un nuevo supermercado al sistema.
+- **supermarket add_product <supermarket_name> <product_name>**: Agregar un producto al inventario del supermercado.
+- **client add <client_name>**: Agregar un cliente al sistema.
+- **client move <client_name> <to_supermarket>**: Mover a un cliente a un supermercado específico.
+- **client pick_up <client_name> <product_name>**: Permitir que un cliente recoja un producto.
+- **supermarket show_clients <supermarket_name>**: Mostrar la lista de clientes en el supermercado.
+- **supermarket show_products <supermarket_name>**: Mostrar la lista de productos en el supermercado.
+- **supermarket restock <supermarket_name> <product_name> <amount>**: Reabastecer un producto en el supermercado.
+- **client buy <client_name> <product_name>**: Comprar un producto y agregarlo a la cesta del cliente.
+- **client show_cart <client_name>**: Mostrar los productos en la cesta del cliente.
+- **client checkout <client_name>**: Preparar al cliente para pagar en caja.
+- **supermarket show_clients_in_cash <supermarket_name>**: Mostrar la lista de clientes en la caja.
+- **supermarket serve_next_customer <supermarket_name>**: Atender al siguiente cliente en la fila de caja.
+- **client leave <client_name>**: Permitir que un cliente salga del supermercado, siempre que haya pagado.
+- **client leave_without_checkout <client_name>**: Permitir que un cliente salga sin comprar, si su cesta está vacía.
+- **client check_cart <client_name> <product_name>**: Verificar si un producto está en la cesta del cliente.
+- **supermarket set_open_close <supermarket_name> <open/close>**: Abrir / Cerrar el supermercado si no hay clientes dentro.
+- **supermarket show_inventory <supermarket_name>**: Mostrar todo el inventario del supermercado.
+- **client remove_from_cart <client_name> <product_name>**: Permitir que el cliente retire un producto de su cesta.
+- **client get_in_line <client_name>**: Permitir que un cliente se ponga en la fila para pagar.
 
 
 
