@@ -12,3 +12,8 @@
 - **client enter_town_hall <client_name>**: Allow a client to enter the town hall.
 - **client request_service <client_name> <service_name>**: Request a specific service from the town hall.
 - **town_hall show_services**: Show the list of services available at the town hall.
+
+## Programa en ejecución
+
+![](img\01.png)
+
