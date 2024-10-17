@@ -67,17 +67,17 @@ class CitySimulation:
     def help(self):
         """Muestra la lista de comandos disponibles."""
         print("""
-Available commands:
-- town_hall add_service <service_name>: Add a new service offered by the town hall.
-- town_hall add_town_hall <town_hall_name>: Add a new town hall to the system.
-- client add_client <client_name>: Add a new client to the system.
-- client remove_client <client_name>: Remove a client from the system.
-- town_hall remove_service <service_name>: Remove a service from the town hall.
-- client enter_town_hall <client_name>: Allow a client to enter the town hall.
-- client request_service <client_name> <service_name>: Request a specific service from the town hall.
-- town_hall show_services: Show the list of services available at the town hall.
-- q: Exit the simulation.
-""")            
+            Available commands:
+            - town_hall add_service <service_name>: Add a new service offered by the town hall.
+            - town_hall add_town_hall <town_hall_name>: Add a new town hall to the system.
+            - client add_client <client_name>: Add a new client to the system.
+            - client remove_client <client_name>: Remove a client from the system.
+            - town_hall remove_service <service_name>: Remove a service from the town hall.
+            - client enter_town_hall <client_name>: Allow a client to enter the town hall.
+            - client request_service <client_name> <service_name>: Request a specific service from the town hall.
+            - town_hall show_services: Show the list of services available at the town hall.
+            - q: Exit the simulation.
+            """)            
 
     def command_loop(self):
         """Bucle principal para gestionar comandos del usuario."""

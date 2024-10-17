@@ -98,5 +98,5 @@ El siguiente código base proporcionará un punto de partida para que cada grupo
 
 > # **Nota final**
 
-Este trabajo será enviado a Samsung como resultado del curso de este sic.
+Este trabajo será enviado a Samsung como **SIC Capstone project**.
 

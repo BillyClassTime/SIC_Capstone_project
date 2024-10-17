@@ -1,6 +1,6 @@
 ### Presentación PowerPoint
 
-Junto con la presentación de PowerPoint, que deberá tener el siguiente contenido, se adjuntará el código del proyecto en un .py.
+Junto con la presentación de *PowerPoint*, que deberá tener el siguiente contenido, se adjuntará el código en un fichero **jupyter notebook**  ***.ipynb***
 
 ------
 
