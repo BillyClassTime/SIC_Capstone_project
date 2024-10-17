@@ -90,7 +90,7 @@ El tiempo asignado para el desarrollo del proyecto es de **8 dias habiles**, dis
 
 El siguiente código base proporcionará un punto de partida para que cada grupo estructure su propio sistema. Este ejemplo define una estructura básica y permite la gestión de agentes 
 
-[Jupyter Notebook - Town hall](SIC_Capstone_project.ipynb)
+[Codigo base](CodeBase00.py)
 
 ## 9. Documentos de entrega
 
