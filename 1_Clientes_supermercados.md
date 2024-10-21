@@ -11,10 +11,10 @@
 - **client pick_up <client_name> <product_name>**: Permitir que un cliente recoja un producto.
 - **supermarket show_clients <supermarket_name>**: Mostrar la lista de clientes en el supermercado.
 - **supermarket show_products <supermarket_name>**: Mostrar la lista de productos en el supermercado.
-- **supermarket restock <supermarket_name> <product_name> <amount>**: Reabastecer un producto en el supermercado.
-- **client buy <client_name> <product_name>**: Comprar un producto y agregarlo a la cesta del cliente.
+- **supermarket restock <supermarket_name> <product_name> < amount>**: Reabastecer un producto en el supermercado.
+- **client pay <client_name>**: Pagar todos los productos que tenga en el carrito cuando haya salido del checkout.
 - **client show_cart <client_name>**: Mostrar los productos en la cesta del cliente.
-- **client checkout <client_name>**: Preparar al cliente para pagar en caja.
+- **client out_of _line<client_name>**: Permite que un cliente salga de la fila porque se le olvido comprar algo, sale de la cola si esta a punto de ser atendido. 
 - **supermarket show_clients_in_cash <supermarket_name>**: Mostrar la lista de clientes en la caja.
 - **supermarket serve_next_customer <supermarket_name>**: Atender al siguiente cliente en la fila de caja.
 - **client leave <client_name>**: Permitir que un cliente salga del supermercado, siempre que haya pagado.
