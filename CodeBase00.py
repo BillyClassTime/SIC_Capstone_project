@@ -64,20 +64,45 @@ class CitySimulation:
         for agent in agents.values():
             print(agent.describe())
 
+    def list_agents(self,agent_type):
+        """Muestra clientes o ayuntamientos en el sistema."""
+        print(f"Current {agent_type}:")
+        for agent in agents.values():
+            if agent_type == 'TownHall' and isinstance(agent,TownHall):
+                print(agent.describe())    
+            elif agent_type == 'Client' and isinstance(agent,Client):
+                print(agent.describe())            
+
     def help(self):
-        """Muestra la lista de comandos disponibles."""
         print("""
             Available commands:
-            - town_hall add_service <service_name>: Add a new service offered by the town hall.
+              ? town_hall Show help for commands about town_hall
+              ? client Show help for commands about client
+              - q: Exit the simulation.
+            """)
+
+    def help_town_hall(self):
+        """Muestra la lista de comandos disponibles."""
+        print("""
+            Available commands for town_hall:
             - town_hall add_town_hall <town_hall_name>: Add a new town hall to the system.
-            - client add_client <client_name>: Add a new client to the system.
-            - client remove_client <client_name>: Remove a client from the system.
-            - town_hall remove_service <service_name>: Remove a service from the town hall.
-            - client enter_town_hall <client_name>: Allow a client to enter the town hall.
-            - client request_service <client_name> <service_name>: Request a specific service from the town hall.
+            - town_hall show_all: Show the list of all town halls in the sytem
+            - town_hall add_service <service_name>: Add a new service offered by the town hall.
             - town_hall show_services: Show the list of services available at the town hall.
+            - town_hall remove_service <service_name>: Remove a service from the town hall.
             - q: Exit the simulation.
             """)            
+        
+    def help_client(self):
+        print("""
+             Available commands for client:  
+            - client add_client <client_name>: Add a new client to the system.
+            - client show_all: Show list of all clients in the system              
+            - client remove_client <client_name>: Remove a client from the system.
+            - client request_service <client_name> <service_name>: Request a specific service from the town hall.
+            - client enter_town_hall <client_name>: Allow a client to enter the town hall.
+            - q: Exit the simulation.
+            """)
 
     def command_loop(self):
         """Bucle principal para gestionar comandos del usuario."""
@@ -93,15 +118,31 @@ class CitySimulation:
         parts = command.split()
         if not parts:
             return
-        
         cmd = parts[0]
-        
         if cmd == '?':
-            self.help()  # Llama al método de ayuda
+            if len(parts)==2:
+                if parts[1]== 'town_hall':
+                    self.help_town_hall()
+                elif parts[1]== 'client':
+                    self.help_client()
+                else:
+                    self.help()
+            else:
+                self.help()            # Llama al método de ayuda
             return
-        
         elif cmd == 'town_hall':
-            if parts[1] == 'add_service':
+            if   parts[1] == 'add_town_hall':
+                try:
+                    _, _, town_hall_name = parts
+                    self.add_agent('town_hall', town_hall_name)
+                except ValueError:
+                    print("Error: Invalid add_town_hall command format. Use 'town_hall add_town_hall <town_hall_name>'")
+            elif parts[1] == 'show_all':   
+                try:
+                    self.list_agents('TownHall')
+                except ValueError:
+                    print("Error: Invalid add_town_hall command format. Use 'town_hall add_town_hall <town_hall_name>'") 
+            elif parts[1] == 'add_service':
                 try:
                     _, _, service_name = parts
                     town_hall_name = next((name for name in agents if isinstance(agents[name], TownHall)), None)
@@ -111,7 +152,12 @@ class CitySimulation:
                         print("No town hall found.")
                 except ValueError:
                     print("Error: Invalid add_service command format. Use 'town_hall add_service <service_name>'")
-            
+            elif parts[1] == 'show_services':
+                town_hall_name = next((name for name in agents if isinstance(agents[name], TownHall)), None)
+                if town_hall_name:
+                    agents[town_hall_name].show_services()
+                else:
+                    print("No town hall found.")
             elif parts[1] == 'remove_service':
                 try:
                     _, _, service_name = parts
@@ -122,46 +168,27 @@ class CitySimulation:
                         print("No town hall found.")
                 except ValueError:
                     print("Error: Invalid remove_service command format. Use 'town_hall remove_service <service_name>'")
-            
-            elif parts[1] == 'show_services':
-                town_hall_name = next((name for name in agents if isinstance(agents[name], TownHall)), None)
-                if town_hall_name:
-                    agents[town_hall_name].show_services()
-                else:
-                    print("No town hall found.")
-            elif parts[1] == 'add_town_hall':
-                try:
-                    _, _, town_hall_name = parts
-                    self.add_agent('town_hall', town_hall_name)
-                except ValueError:
-                    print("Error: Invalid add_town_hall command format. Use 'town_hall add_town_hall <town_hall_name>'")
-
+            else:
+                print("Error: Invalid command.'") 
+                self.help_town_hall()
         elif cmd == 'client':
-            if parts[1] == 'add_client':
+            if   parts[1] == 'add_client':
                 try:
                     _, _, client_name = parts
                     self.add_agent('client', client_name)
                 except ValueError:
                     print("Error: Invalid add_client command format. Use 'client add_client <client_name>'")
-
+            elif parts[1] == 'show_all':   
+                try:
+                    self.list_agents('Client')
+                except ValueError:
+                    print("Error: Invalid add_town_hall command format. Use 'client show_hall'")                          
             elif parts[1] == 'remove_client':
                 try:
                     _, _, client_name = parts
                     self.remove_agent(client_name)
                 except ValueError:
                     print("Error: Invalid remove_client command format. Use 'client remove_client <client_name>'")
-
-            elif parts[1] == 'enter_town_hall':
-                try:
-                    _, _, client_name = parts
-                    if client_name in agents and isinstance(agents[client_name], Client):
-                        agents[client_name].in_town_hall = True
-                        print(f'Client {client_name} entered the town hall.')
-                    else:
-                        print(f'Client {client_name} not found.')
-                except ValueError:
-                    print("Error: Invalid enter_town_hall command format. Use 'client enter_town_hall <client_name>'")
-
             elif parts[1] == 'request_service':
                 try:
                     _, _, client_name, service_name = parts
@@ -175,7 +202,19 @@ class CitySimulation:
                         print(f'Client {client_name} not found.')
                 except ValueError:
                     print("Error: Invalid request_service command format. Use 'client request_service <client_name> <service_name>'")
-
+            elif parts[1] == 'enter_town_hall':
+                try:
+                    _, _, client_name = parts
+                    if client_name in agents and isinstance(agents[client_name], Client):
+                        agents[client_name].in_town_hall = True
+                        print(f'Client {client_name} entered the town hall.')
+                    else:
+                        print(f'Client {client_name} not found.')
+                except ValueError:
+                    print("Error: Invalid enter_town_hall command format. Use 'client enter_town_hall <client_name>'")
+            else:
+                print("Error: Invalid command.'") 
+                self.help_client()
         else:
             print("Unknown command. Type 'help' for a list of commands.")
 
