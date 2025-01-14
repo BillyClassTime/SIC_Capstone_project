@@ -77,6 +77,8 @@ Cada grupo se conformará en parejas para implementar las funcionalidades espec�
   [Clientes y Estadios de Fútbol](6_Clientes_Estadios_Futbol.md)
 
   [Clientes y Ayuntamiento](7_Clientes_Ayuntamiento.md)
+  
+  [Cliente_y_Hospitales](8_Clientes_Hospitales.md)
 
 ## 7. Tempo de Desarrollo
 

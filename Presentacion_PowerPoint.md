@@ -26,8 +26,6 @@ Junto con la presentación de *PowerPoint*, que deberá tener el siguiente conte
 
   - Métodos:
 
-    :
-
     - `add_service(service_name)`: Agrega un nuevo servicio.
     - `remove_service(service_name)`: Elimina un servicio existente.
     - `show_services()`: Muestra todos los servicios disponibles.
