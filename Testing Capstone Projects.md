@@ -35,6 +35,8 @@ Client Billy entered the town hall.
 
 **Update the `test_commands` method with each command from your simulator and its output.**
 
+This file is here:[test_city_simulation.py](test/test_city_simulation.py)
+
 ```python
 def test_commands(self):
     print('testing ...')
