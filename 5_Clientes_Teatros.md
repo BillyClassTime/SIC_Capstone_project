@@ -2,7 +2,7 @@
 
 **Funcionalidad:** Este grupo se centra en la gestión de teatros y la interacción de los clientes con ellos. Permite agregar teatros y espectáculos, así como realizar reservas y compras de tickets. Los comandos permiten a los clientes entrar y salir del teatro, solicitar reembolsos, y verificar el estado de sus tickets y el horario de eventos.
 
-## Comandos ha utilizar
+## Comandos a utilizar
 
 - **theater add <theater_name>**: Agregar un nuevo teatro al sistema.
 - **client add <client_name>**: Agregar un cliente al sistema.

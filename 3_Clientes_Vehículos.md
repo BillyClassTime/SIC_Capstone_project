@@ -2,7 +2,7 @@
 
 **Funcionalidad:** Este grupo se ocupa de las operaciones relacionadas con vehículos y sus propietarios (clientes). Permite agregar vehículos, gestionar la compra y venta de vehículos, y permitir que los clientes interactúen con sus vehículos (entrar, salir, mover, y repostar). También incluye funcionalidades para manejar pasajeros y estados de los vehículos (por ejemplo, si están en movimiento o sin combustible).
 
-## Comandos ha utilizar
+## Comandos a utilizar
 
 - **vehicle add <vehicle_name>**: Agregar un vehículo al sistema.
 - **client add <client_name>**: Agregar un cliente al sistema.

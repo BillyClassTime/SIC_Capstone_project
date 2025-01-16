@@ -2,7 +2,7 @@
 
 **Funcionalidad:** Este grupo gestiona las interacciones entre estudiantes (clientes) y colegios. Permite agregar colegios, cursos y estudiantes, así como inscribir a estudiantes en cursos y gestionar sus exámenes. Los comandos permiten ver listas de estudiantes, cursos y exámenes, así como manejar el proceso de admisión y matrícula en los colegios.
 
-## Comandos ha utilizar
+## Comandos a utilizar
 
 - **school add_school <school_name>**: Agregar un nuevo colegio al sistema.
 - **school create_course <course_name>**: Crear un nuevo curso en el colegio.

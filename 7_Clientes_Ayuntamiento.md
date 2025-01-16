@@ -2,9 +2,7 @@
 
 **Funcionalidad:** Gestión de servicios ofrecidos por el ayuntamiento y las interacciones de los ciudadanos (clientes) con él. Permite agregar y eliminar servicios y ayuntamientos, así como gestionar la entrada de clientes al ayuntamiento y la solicitud de servicios específicos. Esta funcionalidad estará pre-establecida en el código base que será el punto de partida para desarrollar el simulador por cada grupo.
 
-## Comandos utilizados
-
-
+## Comandos a utilizar
 
 **Available commands for town_hall:**
 

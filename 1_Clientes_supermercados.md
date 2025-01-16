@@ -2,7 +2,7 @@
 
 **Funcionalidad:** Este grupo se encarga de gestionar las operaciones de un supermercado y sus clientes. Permite agregar supermercados, productos, y clientes, así como realizar acciones relacionadas con las compras, como recoger productos, pagar cuentas, y gestionar el inventario del supermercado. Los comandos permiten también el manejo de la caja y la interacción entre clientes y el personal del supermercado.
 
-## Comandos ha utilizar
+## Comandos a utilizar
 
 - **supermarket add <supermarket_name>**: Agregar un nuevo supermercado al sistema.
 - **supermarket add_product <supermarket_name> <product_name>**: Agregar un producto al inventario del supermercado.

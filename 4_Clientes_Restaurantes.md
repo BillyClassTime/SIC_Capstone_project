@@ -2,7 +2,7 @@
 
 **Funcionalidad:** Este grupo maneja las operaciones de restaurantes y la interacción de los clientes con ellos. Permite agregar restaurantes, platos, y gestionar reservas. Los comandos permiten a los clientes realizar pedidos, pagar cuentas, cancelar reservas y consultar menús, así como verificar el historial de pedidos en el restaurante.
 
-## Comandos ha utilizar
+## Comandos a utilizar
 
 - **restaurant add <restaurant_name>**: Agregar un nuevo restaurante al sistema.
 
