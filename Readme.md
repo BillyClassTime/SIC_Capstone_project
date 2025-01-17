@@ -64,6 +64,8 @@ Cada grupo se conformar√° en parejas para implementar las funcionalidades espec√
 
 - **Grupos:**
 
+  [Clientes y Ayuntamiento](0_Clientes_Ayuntamiento.md)
+
   [Clientes y Supermercados](1_Clientes_supermercados.md)
 
   [Clientes y Colegios](2_Clientes_Colegios.md)
@@ -76,9 +78,10 @@ Cada grupo se conformar√° en parejas para implementar las funcionalidades espec√
 
   [Clientes y Estadios de F√∫tbol](6_Clientes_Estadios_Futbol.md)
 
-  [Clientes y Ayuntamiento](7_Clientes_Ayuntamiento.md)
+  [Cliente y Hospitales](8_Clientes_Hospitales.md)
+
+  [Clientes y Parques de atracciones](9_ Clientes_ParquesAtraciones.md)
   
-  [Cliente_y_Hospitales](8_Clientes_Hospitales.md)
 
 ## 7. Tempo de Desarrollo
 
