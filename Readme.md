@@ -80,7 +80,7 @@ Cada grupo se conformar√° en parejas para implementar las funcionalidades espec√
 
   [Cliente y Hospitales](8_Clientes_Hospitales.md)
 
-  [Clientes y Parques de atracciones](9_ Clientes_ParquesAtraciones.md)
+  [Clientes y Parques de atracciones](9_Clientes_ParquesAtraciones.md)
   
 
 ## 7. Tempo de Desarrollo
