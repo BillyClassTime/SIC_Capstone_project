@@ -28,7 +28,7 @@
      - **add_request_service**: Añade una solicitud de servicio a la cola.
      - **process_request_service**: Atiende la primera solicitud en la cola.
 4. **CitySimulation**
-   - Atributos**:**
+   - **Atributos**:
      - **TIME_THRESHOLD**: Umbral de tiempo para atender solicitudes.
    - Métodos:
      - `__filter_agents`: Filtra agentes según los tipos proporcionados.
