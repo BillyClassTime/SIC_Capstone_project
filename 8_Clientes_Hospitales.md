@@ -1,4 +1,4 @@
-# **Clientes y Hospitales**
+# 8. **Clientes y Hospitales**
 
 **Funcionalidad:** Gestión de la interacción entre los clientes (personas) y los hospitales. Permite agregar y eliminar hospitales, gestionar citas médicas, solicitudes de atención de urgencias y la asignación de médicos. Esta funcionalidad estará pre-establecida en el código base que será el punto de partida para desarrollar el simulador por cada grupo.
 
