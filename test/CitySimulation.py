@@ -53,6 +53,23 @@ class Client(Agent):
     def current_town_hall(self):
         """Método para obtener el ayuntamiento actual."""
         return self.town_hall_stack.peek()    
+    
+    HELP_MESSAGES = {
+        "add_client": "client add_client <client_name>: Add a new client to the system.",
+        "show_all": "client show_all: Show the list of all clients in the system.",
+        "remove_client": "client remove_client <client_name>: Remove a client from the system.",
+        "request_service": "client request_service <client_name> <town_hall_name> <service_name>: Request a specific service from the town hall.",
+        "enter_town_hall": "client enter_town_hall <client_name> <town_hall_name>: Allow a client to enter the town hall.",
+        "exit_town_hall": "client exit_town_hall <client_name> <town_hall_name>: Allow a client to exit the town hall.",
+        "quit": "q: Exit the simulation."
+    }
+
+    @classmethod
+    def help(cls):
+        """Muestra los comandos disponibles para los clientes."""
+        print("Available commands for client:")
+        for command, description in cls.HELP_MESSAGES.items():
+            print(f"- {description}")
 
 
 # ### Town Hall
@@ -118,18 +135,36 @@ class TownHall(Agent):
         else:
             print("No hay solicitudes en la cola.")
 
+    HELP_MESSAGES = {
+        "add_town_hall": "town_hall add_town_hall <town_hall_name>: Add a new town hall to the system.",
+        "show_all": "town_hall show_all: Show the list of all town halls in the system.",
+        "add_service": "town_hall add_service <town_hall_name> <service_name>: Add a new service offered by a town hall.",
+        "show_services": "town_hall show_services: Show the list of services available at all town halls in the system.",
+        "show_services_specific": "town_hall show_services <town_hall_name>: Show the list of services available at a specific town hall.",
+        "remove_service": "town_hall remove_service <town_hall_name> <service_name>: Remove a service from a town hall.",
+        "show_service_queue": "town_hall show_service_queue <town_hall_name>: Show the list of services queued for a town hall.",
+        "quit": "q: Exit the simulation."
+    }
+
+    @classmethod
+    def help(cls):
+        """Muestra los comandos disponibles para los ayuntamientos."""
+        print("Available commands for town_hall:")
+        for command, description in cls.HELP_MESSAGES.items():
+            print(f"- {description}")
+
 
 # ### City simulation
 
 # In[12]:
 
-
-class CitySimulation:
-    """Clase principal para gestionar la simulación de la ciudad."""
+class AgentManager:
+    """Clase base para gestionar la creación y eliminación de agentes."""
     def __init__(self):
-        self.TIME_THRESHOLD = 10                          # Umbral de 10 segundos
+        self.agents = {}                    # Diccionario para almacenar agentes
+        self.TIME_THRESHOLD = 10            # Umbral de 10 segundos
 
-    def __filter_agents(self,*agents_types):
+    def filter_agents(self,*agents_types):
         """Filtra agentes según los tipos proporcionados."""
         filtered_agents = {
             name: agent for name, agent in agents.items()
@@ -137,7 +172,7 @@ class CitySimulation:
         }
         return filtered_agents
     
-    def __get_agent_by_name(self, agent_name, agent_type):
+    def get_agent_by_name(self, agent_name, agent_type):
         """Devuelve el agente con el nombre dado y tipo específico, o None si no se encuentra."""
         return next((agent for agent in agents.values() 
                      if isinstance(agent, agent_type) and agent.name == agent_name), None)
@@ -166,50 +201,17 @@ class CitySimulation:
         """Muestra todos los agentes o filtra por clientes o ayuntamientos en el sistema."""
         if agent_type:
             print(f"Current {agent_type.__name__}(s):")
-            filtered_agents = self.__filter_agents(agent_type)
+            filtered_agents = self.filter_agents(agent_type)
             for agent in filtered_agents.values():               # Imprimir descripciones de los agentes filtrados
                 print(agent.describe())
         else:
             print("Current agents:")
             for agent in agents.values():
-                print(agent.describe())
-
-    def help_town_hall(self):
-        """Displays the list of available commands."""
-        print("""
-            Available commands for town_hall:
-            - town_hall add_town_hall <town_hall_name>: Add a new town hall to the system.
-            - town_hall show_all: Show the list of all town halls in the system.
-            - town_hall add_service <town_hall_name> <service_name>: Add a new service offered by a town hall.
-            - town_hall show_services: Show the list of services available at all town halls in the system.
-            - town_hall show_services <town_hall_name>: Show the list of services available at a specific town hall.
-            - town_hall remove_service <town_hall_name> <service_name>: Remove a service from a town hall.
-            - town_hall show_service_queue <town_hall_name>: Show the list of services queued for a town hall.
-            - q: Exit the simulation.
-            """)
-
-    def help_client(self):
-        print("""
-            Available commands for client:
-            - client add_client <client_name>: Add a new client to the system.
-            - client show_all: Show the list of all clients in the system.
-            - client remove_client <client_name>: Remove a client from the system.
-            - client request_service <client_name> <town_hall_name> <service_name>: Request a specific service from the town hall.
-            - client enter_town_hall <client_name> <town_hall_name>: Allow a client to enter the town hall.
-            - q: Exit the simulation.
-            """)
-        
-    def help(self):
-        """Displays general help information."""
-        print("""
-            Available help commands:
-            - ? town_hall: Show available commands for town halls.
-            - ? client: Show available commands for clients.
-            """)
+                print(agent.describe())     
 
     def check_ready_services(self):
         """Verifica si hay servicios listos para ser atendidos por cada ayuntamiento."""
-        filtered_agents = self.__filter_agents(TownHall)  # Filtrar solo los ayuntamientos
+        filtered_agents = self.filter_agents(TownHall)  # Filtrar solo los ayuntamientos
         for town_hall in filtered_agents.values():
             if not town_hall.request_services.is_empty(): # Verificar si hay servicios en la cola
                 if self.is_time_to_serve(town_hall):      # Lógica para verificar si es tiempo de atender el servicio 
@@ -222,7 +224,46 @@ class CitySimulation:
             current_time = time.time()                        # Método que deberías implementar para obtener el tiempo actual
             return (current_time - last_request['timestamp']) >= self.TIME_THRESHOLD  # Define el umbral
 
-        return False
+        return False                    
+
+class CitySimulation:
+    """Clase principal para gestionar la simulación de la ciudad."""
+    def __init__(self):
+        
+
+        self.agent_manager = AgentManager()               # Instancia de la clase AgentManager
+        self.agent_manager.agents = agents                # Asignar el diccionario global de agentes a la instancia
+
+         
+        self.ERROR_MESSAGES = {                           # Mensajes de error centralizados
+            "invalid_command": "Error: Invalid command.",
+            "town_hall_not_found": "Error: Town hall '{name}' not found.",
+            "client_not_found": "Error: Client '{name}' not found.",
+            "service_not_found": "Error: Service '{service}' not found in town hall '{town_hall}'.",
+            "invalid_format": "Error: Invalid command format. Use '{expected_format}'."
+        }
+        
+    def help_town_hall(self):
+        """Displays the list of available commands."""
+        TownHall.help()
+
+    def help_client(self):
+        """Muestra los comandos disponibles para los clientes."""
+        Client.help()
+        
+    def help(self):
+        """Displays general help information."""
+        print("""
+            Available help commands:
+            - ? town_hall: Show available commands for town halls.
+            - ? client: Show available commands for clients.
+            """)
+
+    def validate_command(self, parts, expected_length, error_key, expected_format):
+        if len(parts) != expected_length:
+            print(self.ERROR_MESSAGES[error_key].format(expected_format=expected_format))
+            return False
+        return True
 
     def command_loop(self):
         """Bucle principal para gestionar comandos del usuario."""
@@ -232,7 +273,7 @@ class CitySimulation:
             if command == 'q':
                 break
             self.process_command(command)
-            self.check_ready_services()                     #verifica servicios de los ayuntamientos encolados para antenderlos
+            self.agent_manager.check_ready_services()        #verifica servicios de los ayuntamientos encolados 
 
     def process_command(self, command):
         """Procesa los comandos ingresados por el usuario."""
@@ -255,18 +296,18 @@ class CitySimulation:
             if   parts[1] == 'add_town_hall':
                 try:
                     _, _, town_hall_name = parts
-                    self.add_agent(TownHall, town_hall_name)
+                    self.agent_manager.add_agent(TownHall, town_hall_name)
                 except ValueError:
-                    print("Error: Invalid add_town_hall command format. Use 'town_hall add_town_hall <town_hall_name>'")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall add_town_hall <town_hall_name>"))
             elif parts[1] == 'show_all':   
                 try:
-                    self.list_agents(TownHall)
+                    self.agent_manager.list_agents(TownHall)
                 except ValueError:
-                    print("Error: Invalid show_all command format. Use 'town_hall show_all'") 
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall show_all"))
             elif parts[1] == 'add_service':                 #town_hall add_service <town_hall_name> <service_name>
                 try:
                     _, _, town_hall_name, service_name = parts
-                    town_hall = self.__get_agent_by_name(town_hall_name,TownHall)
+                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
                     if town_hall:
                         if service_name not in town_hall.services:
                             town_hall.add_service(service_name)
@@ -275,10 +316,10 @@ class CitySimulation:
                     else:
                         print(f"town_hall not found")
                 except ValueError:
-                    print("Error: Invalid add_service command format. Use 'town_hall add_service <service_name>'")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall add_service <town_hall_name> <service_name>"))
             elif parts[1] == 'show_services':
                 if len(parts)==2:                           #town_hall show_services 
-                    town_halls = self.__filter_agents(TownHall)
+                    town_halls = self.agent_manager.filter_agents(TownHall)
                     if town_halls:
                         for town_hall in town_halls.values():
                             town_hall.show_services()
@@ -286,34 +327,34 @@ class CitySimulation:
                         print("No town hall found.")
                 elif len(parts)==3:                         #town_hall show_services <town_hall_name>
                     _, _, town_hall_name = parts
-                    town_hall = self.__get_agent_by_name(town_hall_name, TownHall)
+                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name, TownHall)
                     if town_hall:
                         town_hall.show_services()
                     else:
                         print(f"Town hall '{town_hall_name}' not found.")
                 else:
-                    print("Error: Invalid show_service command format.")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall show_services <town_hall_name>"))
                     self.help_town_hall()
             elif parts[1] == 'show_service_queue':
                 try:
                     _,_,town_hall_name = parts
-                    town_hall = self.__get_agent_by_name(town_hall_name, TownHall)
+                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name, TownHall)
                     if town_hall:
                         town_hall.show_services_queue()
                     else:
                         print(f"Town hall '{town_hall_name}' not found.")
                 except ValueError:
-                    print("Error: Invalid show_service_queue command format. Use 'town_hall show_service_queue <town_hall_name>'")                        
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall show_service_queue <town_hall_name>"))
             elif parts[1] == 'remove_service':              #town_hall remove_service <town_hall_name> <service_name>
                 try:
                     _, _, town_hall_name, service_name = parts
-                    town_hall = self.__get_agent_by_name(town_hall_name,TownHall)
+                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
                     if town_hall:
                         town_hall.remove_service(service_name)
                     else:
                         print("No town hall found.")
                 except ValueError:
-                    print("Error: Invalid remove_service command format. Use 'town_hall remove_service <service_name>'")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall remove_service <town_hall_name> <service_name>"))
             else:
                 print("Error: Invalid command.'") 
                 self.help_town_hall()
@@ -321,29 +362,29 @@ class CitySimulation:
             if   parts[1] == 'add_client':                  #client add_client <client_name>
                 try:
                     _, _, client_name = parts
-                    self.add_agent(Client, client_name)
+                    self.agent_manager.add_agent(Client, client_name)
                 except ValueError:
-                    print("Error: Invalid add_client command format. Use 'client add_client <client_name>'")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client add_client <client_name>"))
             elif parts[1] == 'show_all':   
                 try:
-                    self.list_agents(Client)
+                    self.agent_manager.list_agents(Client)
                 except ValueError:
-                    print("Error: Invalid add_town_hall command format. Use 'client show_hall'")                          
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client show_all"))
             elif parts[1] == 'remove_client':
                 try:
                     _, _, client_name = parts
-                    self.remove_agent(client_name)
+                    self.agent_manager.remove_agent(client_name)
                 except ValueError:
-                    print("Error: Invalid remove_client command format. Use 'client remove_client <client_name>'")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client remove_client <client_name>"))
             elif parts[1] == 'request_service':             #client request_service <client_name> <town_hall_name> <service_name>
                 try:
                     _, _, client_name, town_hall_name, service_name = parts
-                    client = self.__get_agent_by_name(client_name, Client)
+                    client = self.agent_manager.get_agent_by_name(client_name, Client)
                     if client:
                         if client.current_town_hall() is None:
                            print(f'Client {client_name} can not request servicies in this town hall {town_hall_name}, because not in it')
                         elif client.current_town_hall() == town_hall_name:
-                            town_hall = self.__get_agent_by_name(town_hall_name, TownHall)
+                            town_hall = self.agent_manager.get_agent_by_name(town_hall_name, TownHall)
                             if town_hall:
                                 if service_name in town_hall.services:
                                     town_hall.add_request_service(client_name, service_name)  # Agregar la solicitud a la cola
@@ -357,14 +398,14 @@ class CitySimulation:
                     else:
                         print(f'Client {client_name} not found.')
                 except ValueError:
-                    print("Error: Invalid request_service command format. Use 'client request_service <client_name> <town_hall_name> <service_name>'")           
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client request_service <client_name> <town_hall_name> <service_name>"))
             elif parts[1] == 'enter_town_hall':             #client enter_town_hall <client_name> <town_hall_name>
                         try:
                             _, _, client_name, town_hall_name = parts
 
-                            client =  self.__get_agent_by_name(client_name,Client)
+                            client =  self.agent_manager.get_agent_by_name(client_name,Client)
                             if client:
-                                town_hall = self.__get_agent_by_name(town_hall_name,TownHall)
+                                town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
                                 if town_hall:
                                     if client.current_town_hall() is None:
                                         client.enter_town_hall(town_hall_name)
@@ -378,14 +419,14 @@ class CitySimulation:
                             else:
                                 print(f'Client {client_name} not found.')
                         except ValueError:
-                            print("Error: Invalid enter_town_hall command format. Use 'client enter_town_hall <client_name> <town_hall_name>'")
+                            print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client enter_town_hall <client_name> <town_hall_name>"))
             elif parts[1] == 'exit_town_hall':              #client exit_town_hall <client_name> <town_hall_name>
                 try:
                     _, _, client_name, town_hall_name = parts
 
-                    client =  self.__get_agent_by_name(client_name,Client)
+                    client =  self.agent_manager.get_agent_by_name(client_name,Client)
                     if client:
-                        town_hall = self.__get_agent_by_name(town_hall_name,TownHall)
+                        town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
                         if town_hall:
                             if client.current_town_hall() is None:
                                print(f'Client {client_name} can not exit of town hall {town_hall_name}, because not in it')
@@ -399,9 +440,9 @@ class CitySimulation:
                     else:
                         print(f'Client {client_name} not found.')
                 except ValueError:
-                    print("Error: Invalid enter_town_hall command format. Use 'client exit_town_hall <client_name> <town_hall_name>'")
+                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client exit_town_hall <client_name> <town_hall_name>"))
             else:
-                print("Error: Invalid command.'") 
+                print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="Invalid command")))
                 self.help_client()
         else:
             print("Unknown command. Type 'help' for a list of commands.")
