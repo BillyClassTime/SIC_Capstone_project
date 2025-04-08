@@ -107,7 +107,7 @@ class TownHall(Agent):
         if not self.request_services.is_empty():
             print(f"Services in queue for town hall '{self.name}':")
             for request in self.request_services.queue:
-                print(f"Client: {request['client_name']}, Service: {request['service_name']}, Timestamp: {request['timestamp']:.2f}")
+                print(f"Client: {request['client_name']}, Service: {request['service_name']}, Timestamp: {round(request['timestamp'],0)}")
         else:
             print(f"No services in queue for town hall '{self.name}'.")
 
@@ -143,6 +143,7 @@ class TownHall(Agent):
         "show_services_specific": "town_hall show_services <town_hall_name>: Show the list of services available at a specific town hall.",
         "remove_service": "town_hall remove_service <town_hall_name> <service_name>: Remove a service from a town hall.",
         "show_service_queue": "town_hall show_service_queue <town_hall_name>: Show the list of services queued for a town hall.",
+        "town_hall remove_town_hall": "town_hall remove_town_hall <town_hall_name>: Remove a town hall from the system.",
         "quit": "q: Exit the simulation."
     }
 
@@ -213,9 +214,11 @@ class AgentManager:
         """Verifica si hay servicios listos para ser atendidos por cada ayuntamiento."""
         filtered_agents = self.filter_agents(TownHall)  # Filtrar solo los ayuntamientos
         for town_hall in filtered_agents.values():
-            if not town_hall.request_services.is_empty(): # Verificar si hay servicios en la cola
-                if self.is_time_to_serve(town_hall):      # Lógica para verificar si es tiempo de atender el servicio 
-                    town_hall.process_request_service()   # Llama al método para atender el servicio de los ayuntamientos encolados
+            while not town_hall.request_services.is_empty():  # Procesar todos los servicios en la cola
+                if self.is_time_to_serve(town_hall):  # Verificar si es tiempo de atender el servicio
+                    town_hall.process_request_service()  # Procesar el servicio
+                else:
+                    break  # Salir si no es tiempo de procesar el siguiente servicio
 
     def is_time_to_serve(self, town_hall):
         """Verifica si es el momento de atender el siguiente servicio en la cola."""
@@ -264,6 +267,12 @@ class CitySimulation:
             print(self.ERROR_MESSAGES[error_key].format(expected_format=expected_format))
             return False
         return True
+    
+    def get_agent_or_error(self, agent_name, agent_type, error_key):
+        agent = self.agent_manager.get_agent_by_name(agent_name, agent_type)
+        if not agent:
+            print(self.ERROR_MESSAGES[error_key].format(name=agent_name))
+        return agent
 
     def command_loop(self):
         """Bucle principal para gestionar comandos del usuario."""
@@ -294,29 +303,21 @@ class CitySimulation:
             return
         elif cmd == 'town_hall':
             if   parts[1] == 'add_town_hall':
-                try:
+                if self.validate_command(parts, 3, "invalid_format", "town_hall add_town_hall <town_hall_name>"):
                     _, _, town_hall_name = parts
                     self.agent_manager.add_agent(TownHall, town_hall_name)
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall add_town_hall <town_hall_name>"))
             elif parts[1] == 'show_all':   
-                try:
+                if self.validate_command(parts, 2, "invalid_format", "town_hall show_all"):
                     self.agent_manager.list_agents(TownHall)
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall show_all"))
-            elif parts[1] == 'add_service':                 #town_hall add_service <town_hall_name> <service_name>
-                try:
+            elif parts[1] == 'add_service':                 
+                if self.validate_command(parts, 4, "invalid_format", "town_hall add_service <town_hall_name> <service_name>"):
                     _, _, town_hall_name, service_name = parts
-                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
+                    town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                     if town_hall:
                         if service_name not in town_hall.services:
                             town_hall.add_service(service_name)
                         else:
                             print(f"Service '{service_name}' already exists in town hall '{town_hall_name}'.")                
-                    else:
-                        print(f"town_hall not found")
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall add_service <town_hall_name> <service_name>"))
             elif parts[1] == 'show_services':
                 if len(parts)==2:                           #town_hall show_services 
                     town_halls = self.agent_manager.filter_agents(TownHall)
@@ -324,109 +325,103 @@ class CitySimulation:
                         for town_hall in town_halls.values():
                             town_hall.show_services()
                     else:
-                        print("No town hall found.")
+                        print(self.ERROR_MESSAGES["town_hall_not_found"].format(name=town_hall_name))
                 elif len(parts)==3:                         #town_hall show_services <town_hall_name>
                     _, _, town_hall_name = parts
-                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name, TownHall)
+                    town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                     if town_hall:
                         town_hall.show_services()
-                    else:
-                        print(f"Town hall '{town_hall_name}' not found.")
                 else:
                     print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall show_services <town_hall_name>"))
                     self.help_town_hall()
             elif parts[1] == 'show_service_queue':
-                try:
+                if self.validate_command(parts, 3, "invalid_format", "town_hall show_service_queue <town_hall_name>"):
                     _,_,town_hall_name = parts
-                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name, TownHall)
+                    town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                     if town_hall:
                         town_hall.show_services_queue()
-                    else:
-                        print(f"Town hall '{town_hall_name}' not found.")
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall show_service_queue <town_hall_name>"))
-            elif parts[1] == 'remove_service':              #town_hall remove_service <town_hall_name> <service_name>
-                try:
+            elif parts[1] == 'remove_service':             
+                if self.validate_command(parts, 4, "invalid_format", "town_hall remove_service <town_hall_name> <service_name>"):
                     _, _, town_hall_name, service_name = parts
-                    town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
+                    town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                     if town_hall:
                         town_hall.remove_service(service_name)
-                    else:
-                        print("No town hall found.")
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="town_hall remove_service <town_hall_name> <service_name>"))
+            elif parts[1] == 'remove_town_hall':  # town_hall remove_town_hall <town_hall_name>
+                if self.validate_command(parts, 3, "invalid_format", "town_hall remove_town_hall <town_hall_name>"):
+                    _, _, town_hall_name = parts
+                    town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
+                    if town_hall:
+
+                        # Verificar si hay procesos encolados
+                        if not town_hall.request_services.is_empty():
+                            print(f"Cannot remove town hall '{town_hall_name}' because it has queued processes.")
+                            return
+                        
+                        # Verificar si el ayuntamiento tiene servicios
+                        if town_hall.services:
+                            print(f"Cannot remove town hall '{town_hall_name}' because it still has services.")
+                            return
+                        
+                        # Verificar si hay clientes en el ayuntamiento
+                        clients_in_town_hall = [
+                            client for client in agents.values()
+                            if isinstance(client, Client) and client.current_town_hall() == town_hall_name
+                        ]
+                        if clients_in_town_hall:
+                            print(f"Cannot remove town hall '{town_hall_name}' because there are clients inside.")
+                            return
+                        
+                        # Si pasa todas las verificaciones, eliminar el ayuntamiento
+                        self.agent_manager.remove_agent(town_hall_name)                        
             else:
-                print("Error: Invalid command.'") 
+                print(self.ERROR_MESSAGES["invalid_command"])
                 self.help_town_hall()
         elif cmd == 'client':
             if   parts[1] == 'add_client':                  #client add_client <client_name>
-                try:
+                if self.validate_command(parts, 3, "invalid_format", "client add_client <client_name>"):
                     _, _, client_name = parts
                     self.agent_manager.add_agent(Client, client_name)
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client add_client <client_name>"))
             elif parts[1] == 'show_all':   
-                try:
+                if self.validate_command(parts, 2, "invalid_format", "client show_all"):
                     self.agent_manager.list_agents(Client)
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client show_all"))
             elif parts[1] == 'remove_client':
-                try:
+                if self.validate_command(parts, 3, "invalid_format", "client remove_client <client_name>"):
                     _, _, client_name = parts
                     self.agent_manager.remove_agent(client_name)
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client remove_client <client_name>"))
-            elif parts[1] == 'request_service':             #client request_service <client_name> <town_hall_name> <service_name>
-                try:
+            elif parts[1] == 'request_service':  # client request_service <client_name> <town_hall_name> <service_name>
+                if self.validate_command(parts, 5, "invalid_format", "client request_service <client_name> <town_hall_name> <service_name>"):
                     _, _, client_name, town_hall_name, service_name = parts
-                    client = self.agent_manager.get_agent_by_name(client_name, Client)
+                    client = self.get_agent_or_error(client_name, Client, "client_not_found")
                     if client:
-                        if client.current_town_hall() is None:
-                           print(f'Client {client_name} can not request servicies in this town hall {town_hall_name}, because not in it')
-                        elif client.current_town_hall() == town_hall_name:
-                            town_hall = self.agent_manager.get_agent_by_name(town_hall_name, TownHall)
-                            if town_hall:
-                                if service_name in town_hall.services:
-                                    town_hall.add_request_service(client_name, service_name)  # Agregar la solicitud a la cola
-                                    print(f'Client {client_name} requested service: {service_name}')
-                                else:
-                                    print(f'Service {service_name} not available in town hall {town_hall_name}')
+                        town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
+                        if town_hall:
+                            if client.current_town_hall() != town_hall_name:
+                                print(f"Client {client_name} can not request servicies in this town hall {town_hall_name}, because not in it")
+                            elif service_name not in town_hall.services:
+                                print(self.ERROR_MESSAGES["service_not_found"].format(service=service_name, town_hall=town_hall_name))
                             else:
-                                print(f"Town hall {town_hall_name} not found.")
-                        else:
-                            print(f'Client {client_name} not inside the {town_hall_name}')
-                    else:
-                        print(f'Client {client_name} not found.')
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client request_service <client_name> <town_hall_name> <service_name>"))
+                                town_hall.add_request_service(client_name, service_name)
+                                print(f"Client {client_name} requested service: {service_name}")
             elif parts[1] == 'enter_town_hall':             #client enter_town_hall <client_name> <town_hall_name>
-                        try:
-                            _, _, client_name, town_hall_name = parts
-
-                            client =  self.agent_manager.get_agent_by_name(client_name,Client)
-                            if client:
-                                town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
-                                if town_hall:
-                                    if client.current_town_hall() is None:
-                                        client.enter_town_hall(town_hall_name)
-                                        print(f'Client {client_name} entered the town hall.')
-                                    elif client.current_town_hall() == town_hall_name:
-                                        print(f'Client {client_name} already in town hall {town_hall_name}.')
-                                    else:
-                                        print(f'Client {client_name} is in other town hall in {client.current_town_hall() }.')
-                                else:
-                                    print(f'town hall {town_hall_name} not found.')
-                            else:
-                                print(f'Client {client_name} not found.')
-                        except ValueError:
-                            print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client enter_town_hall <client_name> <town_hall_name>"))
-            elif parts[1] == 'exit_town_hall':              #client exit_town_hall <client_name> <town_hall_name>
-                try:
+                if self.validate_command(parts, 4, "invalid_format", "client enter_town_hall <client_name> <town_hall_name>"):
                     _, _, client_name, town_hall_name = parts
-
-                    client =  self.agent_manager.get_agent_by_name(client_name,Client)
+                    client =  self.get_agent_or_error(client_name, Client, "client_not_found")
                     if client:
-                        town_hall = self.agent_manager.get_agent_by_name(town_hall_name,TownHall)
+                        town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
+                        if town_hall:
+                            if client.current_town_hall() is None:
+                                client.enter_town_hall(town_hall_name)
+                                print(f'Client {client_name} entered the town hall.')
+                            elif client.current_town_hall() == town_hall_name:
+                                print(f'Client {client_name} already in town hall {town_hall_name}.')
+                            else:
+                                print(f'Client {client_name} is in other town hall in {client.current_town_hall() }.')
+            elif parts[1] == 'exit_town_hall':              #client exit_town_hall <client_name> <town_hall_name>
+                if self.validate_command(parts, 4, "invalid_format", "client exit_town_hall <client_name> <town_hall_name>"):
+                    _, _, client_name, town_hall_name = parts
+                    client =  self.get_agent_or_error(client_name, Client, "client_not_found")
+                    if client:
+                        town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                         if town_hall:
                             if client.current_town_hall() is None:
                                print(f'Client {client_name} can not exit of town hall {town_hall_name}, because not in it')
@@ -435,14 +430,8 @@ class CitySimulation:
                                 print(f'Client {client_name} exit the town hall {town_hall_name}.')
                             else:
                                 print(f'Client {client_name} is in other town hall in {client.current_town_hall()}.')
-                        else:
-                            print(f'town hall {town_hall_name} not found.')
-                    else:
-                        print(f'Client {client_name} not found.')
-                except ValueError:
-                    print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="client exit_town_hall <client_name> <town_hall_name>"))
             else:
-                print(self.ERROR_MESSAGES["invalid_format"].format(expected_format="Invalid command")))
+                print(self.ERROR_MESSAGES["invalid_format"])
                 self.help_client()
         else:
             print("Unknown command. Type 'help' for a list of commands.")
