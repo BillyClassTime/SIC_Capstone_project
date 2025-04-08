@@ -34,7 +34,7 @@ Descripción del contenido de la presentación de entrega.
 
 ### Diapositiva 3: Clases Implementadas
 
-- **Clase [Agent](vscode-file://vscode-app/c:/Users/billy/AppData/Local/Programs/Microsoft VS Code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) (Base)**
+- **Clase [Agent]() (Base)**
   - Atributos:
     - **name** (nombre del agente).
   - Métodos:
@@ -65,7 +65,7 @@ Describir la herencia entre ellas (Debe existir)
   - Por nombre:
     - Método [get_agent_by_name(agent_name, agent_type)]() para buscar agentes específicos por nombre y tipo.
   - Por tipo:
-    - Método [filter_agents(*agent_types)]() para filtrar agentes según su tipo (por ejemplo, [Client](vscode-file://vscode-app/c:/Users/billy/AppData/Local/Programs/Microsoft VS Code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html), `Supermarket`, `School`, etc.).
+    - Método [filter_agents(*agent_types)]() para filtrar agentes según su tipo (por ejemplo, [Client](), `Supermarket`, `School`, etc.).
 
 ------
 
