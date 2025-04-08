@@ -1,0 +1,22 @@
+{
+  "town_halls": {
+    "Pinto": {
+      "services": ["Empadronar", "Licencias"],
+      "queue": [
+        {"client_name": "Billy", "service_name": "Empadronar", "timestamp": 1744070701.0}
+      ]
+    },
+    "Madrid": {
+      "services": ["Certificados", "Impuestos"],
+      "queue": []
+    }
+  },
+  "clients": {
+    "Billy": {
+      "current_town_hall": "Pinto"
+    },
+    "Alice": {
+      "current_town_hall": null
+    }
+  }
+}

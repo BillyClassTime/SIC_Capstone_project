@@ -3,15 +3,13 @@
 
 # # SIC Capstone project
 
-# **Town Hall project as an example to start.**
+# **Town Hall project: example code to get started.**
 
 # ## Class hierarchy
 
 # ### Agent
 
-# In[3]:
-
-import time
+# In[5]:
 
 
 class Agent:
@@ -28,7 +26,7 @@ class Agent:
 
 # ### Client
 
-# In[6]:
+# In[8]:
 
 
 class Client(Agent):
@@ -74,7 +72,7 @@ class Client(Agent):
 
 # ### Town Hall
 
-# In[9]:
+# In[11]:
 
 
 class TownHall(Agent):
@@ -122,7 +120,7 @@ class TownHall(Agent):
             }
             self.request_services.enqueue(request)         # Encolar la solicitud            
         else:
-            print(f"El servicio '{service_name}' no está disponible en el ayuntamiento '{self.name}'.")
+            print(f"the service '{service_name}' is not available in the town hall '{self.name}'.")
 
     def process_request_service(self):
         """Atiende la primera solicitud en la cola si hay alguna."""
@@ -131,9 +129,9 @@ class TownHall(Agent):
             client_name = request['client_name']
             service_name = request['service_name']
             timestamp = request['timestamp']
-            print(f"Solicitud del servicio '{service_name}' por el Cliente '{client_name}' atendida.")
+            print(f"Requested service was attended: {service_name} for client {client_name} from town hall {self.name}.")
         else:
-            print("No hay solicitudes en la cola.")
+            print(f"No requests in the queue for town hall '{self.name}'.")
 
     HELP_MESSAGES = {
         "add_town_hall": "town_hall add_town_hall <town_hall_name>: Add a new town hall to the system.",
@@ -155,9 +153,10 @@ class TownHall(Agent):
             print(f"- {description}")
 
 
-# ### City simulation
+# ### Agent Manager
 
-# In[12]:
+# In[14]:
+
 
 class AgentManager:
     """Clase base para gestionar la creación y eliminación de agentes."""
@@ -227,7 +226,57 @@ class AgentManager:
             current_time = time.time()                        # Método que deberías implementar para obtener el tiempo actual
             return (current_time - last_request['timestamp']) >= self.TIME_THRESHOLD  # Define el umbral
 
-        return False                    
+        return False        
+    
+    def validate_client_location(self, client, town_hall_name):
+        if client.current_town_hall() is None:
+            print(f'Client {client.name} cannot perform this action because not in it.')
+            return False
+        elif client.current_town_hall() != town_hall_name:
+            print(f'Client {client.name} is in a different town hall: {client.current_town_hall()}.')
+            return False
+        return True
+
+    def load_agents_from_file(self, file_path):
+        """Carga agentes desde un fichero JSON."""
+
+        import json
+        try:
+            with open(file_path, 'r') as file:
+                data = json.load(file)
+
+            # Cargar town_halls
+            for town_hall_name, town_hall_data in data.get("town_halls", {}).items():
+                self.add_agent(TownHall, town_hall_name)
+                town_hall = self.get_agent_by_name(town_hall_name, TownHall)
+                if town_hall:
+                    # Añadir servicios
+                    for service in town_hall_data.get("services", []):
+                        town_hall.add_service(service)
+                    # Añadir solicitudes en cola
+                    for request in town_hall_data.get("queue", []):
+                        town_hall.add_request_service(request["client_name"], request["service_name"])
+
+            # Cargar clients
+            for client_name, client_data in data.get("clients", {}).items():
+                self.add_agent(Client, client_name)
+                client = self.get_agent_by_name(client_name, Client)
+                if client and client_data.get("current_town_hall"):
+                    client.enter_town_hall(client_data["current_town_hall"])
+
+            print(f"--- Agents loaded successfully from {file_path}. --- ")
+        except FileNotFoundError:
+            print(f"Error: File '{file_path}' not found.")
+        except json.JSONDecodeError:
+            print(f"Error: File '{file_path}' is not a valid JSON file.")
+        except Exception as e:
+            print(f"An error occurred while loading agents: {e}")     
+
+
+# ### City simulation
+
+# In[17]:
+
 
 class CitySimulation:
     """Clase principal para gestionar la simulación de la ciudad."""
@@ -260,11 +309,19 @@ class CitySimulation:
             Available help commands:
             - ? town_hall: Show available commands for town halls.
             - ? client: Show available commands for clients.
+            - load_agents <file_path>: Load agents from a JSON file.
+            - q: Exit the simulation.              
             """)
 
     def validate_command(self, parts, expected_length, error_key, expected_format):
         if len(parts) != expected_length:
             print(self.ERROR_MESSAGES[error_key].format(expected_format=expected_format))
+            return False
+        return True
+    
+    def validate_service_in_town_hall(self, town_hall, service_name):
+        if service_name not in town_hall.services:
+            print(self.ERROR_MESSAGES["service_not_found"].format(service=service_name, town_hall=town_hall.name))
             return False
         return True
     
@@ -301,6 +358,10 @@ class CitySimulation:
             else:
                 self.help()            # Llama al método de ayuda
             return
+        elif cmd == 'load_agents':
+            if self.validate_command(parts, 2, "invalid_format", "load_agents <file_path>"):
+                _, file_path = parts
+                self.agent_manager.load_agents_from_file(file_path)
         elif cmd == 'town_hall':
             if   parts[1] == 'add_town_hall':
                 if self.validate_command(parts, 3, "invalid_format", "town_hall add_town_hall <town_hall_name>"):
@@ -344,7 +405,7 @@ class CitySimulation:
                 if self.validate_command(parts, 4, "invalid_format", "town_hall remove_service <town_hall_name> <service_name>"):
                     _, _, town_hall_name, service_name = parts
                     town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
-                    if town_hall:
+                    if self.validate_service_in_town_hall(town_hall, service_name):
                         town_hall.remove_service(service_name)
             elif parts[1] == 'remove_town_hall':  # town_hall remove_town_hall <town_hall_name>
                 if self.validate_command(parts, 3, "invalid_format", "town_hall remove_town_hall <town_hall_name>"):
@@ -395,13 +456,10 @@ class CitySimulation:
                     if client:
                         town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                         if town_hall:
-                            if client.current_town_hall() != town_hall_name:
-                                print(f"Client {client_name} can not request servicies in this town hall {town_hall_name}, because not in it")
-                            elif service_name not in town_hall.services:
-                                print(self.ERROR_MESSAGES["service_not_found"].format(service=service_name, town_hall=town_hall_name))
-                            else:
-                                town_hall.add_request_service(client_name, service_name)
-                                print(f"Client {client_name} requested service: {service_name}")
+                            if self.agent_manager.validate_client_location(client, town_hall_name):
+                                if self.validate_service_in_town_hall(town_hall, service_name):
+                                    town_hall.add_request_service(client_name, service_name)
+                                    print(f"Client {client_name} requested service: {service_name}")
             elif parts[1] == 'enter_town_hall':             #client enter_town_hall <client_name> <town_hall_name>
                 if self.validate_command(parts, 4, "invalid_format", "client enter_town_hall <client_name> <town_hall_name>"):
                     _, _, client_name, town_hall_name = parts
@@ -412,10 +470,8 @@ class CitySimulation:
                             if client.current_town_hall() is None:
                                 client.enter_town_hall(town_hall_name)
                                 print(f'Client {client_name} entered the town hall.')
-                            elif client.current_town_hall() == town_hall_name:
+                            elif self.agent_manager.validate_client_location(client, town_hall_name):
                                 print(f'Client {client_name} already in town hall {town_hall_name}.')
-                            else:
-                                print(f'Client {client_name} is in other town hall in {client.current_town_hall() }.')
             elif parts[1] == 'exit_town_hall':              #client exit_town_hall <client_name> <town_hall_name>
                 if self.validate_command(parts, 4, "invalid_format", "client exit_town_hall <client_name> <town_hall_name>"):
                     _, _, client_name, town_hall_name = parts
@@ -423,13 +479,9 @@ class CitySimulation:
                     if client:
                         town_hall = self.get_agent_or_error(town_hall_name, TownHall, "town_hall_not_found")
                         if town_hall:
-                            if client.current_town_hall() is None:
-                               print(f'Client {client_name} can not exit of town hall {town_hall_name}, because not in it')
-                            elif client.current_town_hall() == town_hall_name:
+                            if self.agent_manager.validate_client_location(client, town_hall_name):
                                 client.exit_town_hall()
                                 print(f'Client {client_name} exit the town hall {town_hall_name}.')
-                            else:
-                                print(f'Client {client_name} is in other town hall in {client.current_town_hall()}.')
             else:
                 print(self.ERROR_MESSAGES["invalid_format"])
                 self.help_client()
@@ -439,7 +491,7 @@ class CitySimulation:
 
 # ### Stack
 
-# In[15]:
+# In[20]:
 
 
 class Stack:
@@ -461,7 +513,7 @@ class Stack:
 
 # ### Queue
 
-# In[18]:
+# In[23]:
 
 
 class Queue:
@@ -487,18 +539,19 @@ class Queue:
 
 # ## General agent dictionary
 
-# In[21]:
+# In[26]:
 
 
 # Diccionario global para almacenar agentes
 agents = {}
 
 
-# ## Main program
+# # Main program
 
-# In[ ]:
+# In[29]:
 
 
+import time
 if __name__ == "__main__":
     simulation = CitySimulation()
     simulation.command_loop()

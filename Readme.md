@@ -24,22 +24,36 @@ Cada grupo debe crear un sistema que incluya:
 
 ## 3. Requisitos de Diseño
 
-- **Principios de responsabilidad única**: Asegurarse de que las clases sigan los principios de Responsabilidad Única (SRP), para que cada clase se encargue de una única responsabilidad.
+- **Principios de responsabilidad única**: Asegurarse de que las clases sigan los principios de Responsabilidad Única (`SRP`), para que cada clase se encargue de una única responsabilidad.
 - **Modularidad**: Estructurar el código de manera que sea fácil de entender y mantener, dividiendo la lógica en módulos y funciones claramente definidas.
 - **Interactividad**: El sistema debe permitir la interacción mediante una interfaz de línea de comandos, donde los usuarios puedan introducir comandos para gestionar los agentes.
+- **Persistencia:** Los datos del simulador deberán ser almacenados en un fichero `JSON` que servirá también para recuperar el estado del simulador en el momento del almacenaje.
 
 ## 4. Especificaciones Técnicas
 
 Cada grupo debe utilizar las siguientes especificaciones en su desarrollo:
 
 - **Clases**:
-  - Implementar clases para cada tipo de agente, como `Vehicle`, `Supermarket`, `Student`, `TownHall`, etc. según corresponda a la definición funcional de su grupo
-- **Colas**:
-  - Utilizar estructuras de datos de tipo cola para gestionar situaciones como la espera, registros, altas, etc, según corresponda a la definición funcional de su grupo.
+  - Implementar clases para cada tipo de agente, como `Vehicle`, `Supermarket`, `Student`, `TownHall`, etc., según corresponda a la definición funcional de su grupo.
+
+- **Gestión de Datos**:
+  - Utilizar estructuras de datos como `listas`, `tuplas`, `diccionarios` y `conjuntos` para gestionar agentes, servicios y solicitudes.
+  - Aplicar comprensión de listas para filtrar y transformar datos de manera eficiente.
+  - Usar funciones de orden superior como `map`, `filter` y expresiones `lambda` para manipular datos y realizar operaciones específicas.
+
 - **Búsqueda**:
-  - Implementar búsqueda secuencial y binaria donde sea necesario, por ejemplo, para buscar productos en un supermercado o estudiantes en una clase, siempre y cuando este cubierto por la especificación funcional de cada grupo.
-- **Algoritmos de Ordenación**:
-  - Implementar algoritmos de ordenación (burbuja, selección, inserción, merge sort, quick sort) para organizar listas de agentes en cada grupo y siempre antes de dar respuestas a comandos de mostrar.
+  - Implementar búsquedas utilizando expresiones regulares para encontrar patrones en nombres de agentes, servicios o comandos.
+  - Usar `closures` para encapsular lógica de búsqueda personalizada, si aplica.
+
+- **Ordenación y Filtrado**:
+  - Utilizar métodos integrados de Python como `sorted` con claves personalizadas para ordenar listas de agentes o servicios.
+  - Aplicar filtros dinámicos con expresiones `lambda` y funciones como `filter` para mostrar datos según criterios específicos.
+
+- **Validación y Procesamiento**:
+  - Implementar validaciones dinámicas utilizando expresiones regulares para comandos y entradas del usuario.
+  - Usar `closures` para encapsular lógica de validación y reutilizarla en diferentes partes del programa.
+
+Estas especificaciones permiten aprovechar al máximo las características de Python, simplificando el código y mejorando su legibilidad y eficiencia.
 
 ## 5. Comandos Generales
 
@@ -47,24 +61,25 @@ Cada grupo tiene definido un conjunto de comandos que permitan gestionar sus age
 
 Ejemplos de comandos que se encontrarán especificados en cada grupo, en general son de este tipo:
 
-- `add_agent <agent_type> <agent_name>`: Añadir un nuevo agente al sistema.
-- `remove_agent <agent_name>`: Eliminar un agente del sistema.
-- `move_agent <agent_name>`: Mover un agente dentro del sistema.
-- `request_service <agent_name> <service_type>`: Solicitar un servicio específico.
-- `check_status <agent_name>`: Comprobar el estado de un agente.
-- `list_agents`: Listar todos los agentes en el sistema.
+- `agent_type <add_agent_type> <agent_name>`: Añadir un nuevo agente al sistema.
+- `agent_type <remove_agent_type> <agent_name>`: Eliminar un agente del sistema.
+- `agent_type show_all`: Muestra todos los agentes existentes en el sistema
 
 ## 6. Desarrollo en Parejas
 
-Cada grupo se conformará en parejas para implementar las funcionalidades específicas de sus agentes. Los roles serán como se describen a continuación, intercambiandose durante el desarrollo del mismo:
+Cada grupo se conformará en parejas para implementar las funcionalidades específicas de sus agentes. 
+
+Los roles serán como se describen a continuación, intercambiandose durante el desarrollo del mismo:
 
 - **Desarrollador de Lógica**: Responsable de la implementación de la lógica del agente y sus métodos.
 
 - **Integrador de Comandos**: Encargado de conectar la lógica del agente con los comandos de línea de comandos, asegurando que los usuarios puedan interactuar con el sistema de manera efectiva.
 
-- **Grupos:**
+- **Documentador:** Encargado de cuidar los detalles, nombres de documentos, presentación a entregar.
 
-  [Clientes y Ayuntamiento](0_Clientes_Ayuntamiento.md)
+- **Tester:** Encargado de la implementación de los casos de pruebas
+
+- **Grupos:**
 
   [Clientes y Supermercados](1_Clientes_supermercados.md)
 
@@ -81,19 +96,20 @@ Cada grupo se conformará en parejas para implementar las funcionalidades espec�
   [Cliente y Hospitales](8_Clientes_Hospitales.md)
 
   [Clientes y Parques de atracciones](9_Clientes_ParquesAtraciones.md)
-  
 
-## 7. Tempo de Desarrollo
+## 7. Fecha de entrega
 
-El tiempo asignado para el desarrollo del proyecto es de **8 dias habiles**, distribuidas como sigue:
+La fecha de entrega es el día <19 de mayo de 2025>
 
-- **Planificación y diseño**: 1 días.
-- **Implementación**: 6 días.
-- **Pruebas y ajuste**: 1 días.
+- **Planificación y diseño** 
+- **Implementación**
+- **Pruebas y ajuste**
 
 ## 8. Ejemplo de Código Base
 
 El siguiente código base proporcionará un punto de partida para que cada grupo estructure su propio sistema. Este ejemplo define una estructura básica y permite la gestión de agentes 
+
+[Clientes y Ayuntamiento](0_Clientes_Ayuntamiento.md)
 
 [Jupyter Notebook - Town hall](SIC_Capstone_project.ipynb)
 

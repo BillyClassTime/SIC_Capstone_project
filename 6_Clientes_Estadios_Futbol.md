@@ -24,3 +24,6 @@
 - **client check_event_schedule <client_name> <stadium_name>**: Consultar el calendario de eventos en el estadio.
 - **client report_issue <client_name> <stadium_name> <issue_description>**: Reportar un problema o inquietud mientras se encuentra en el estadio.
 - **client show_all_clients**: Mostrar la lista de todos los clientes en el sistema
+
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+- **save_agents <file_path>**: Save agents to a `JSON` file.

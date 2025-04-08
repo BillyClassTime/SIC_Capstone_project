@@ -24,3 +24,5 @@
 - **school grade_exam <school_name> <course_name> <client_name> <exam_name> <grade>**: Calificar un examen que un cliente ha presentado en un curso.
 - **school remove_exam_from_course <school_name> <course_name> <exam_name>**: Eliminar un examen de un curso si ningún cliente lo ha presentado.
 - **school show_exams <school_name> <course_name>**: Mostrar la lista de exámenes disponibles para un curso en el colegio.
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+- **save_agents <file_path>**: Save agents to a `JSON` file.

@@ -25,5 +25,6 @@
 - **client remove_from_cart <client_name> <product_name>**: Permitir que el cliente retire un producto de su cesta.
 - **client get_in_line <client_name>**: Permitir que un cliente se ponga en la fila para pagar.
 
-
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+- **save_agents <file_path>**: Save agents to a `JSON` file.
 

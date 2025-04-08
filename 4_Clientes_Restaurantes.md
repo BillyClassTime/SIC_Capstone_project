@@ -45,3 +45,7 @@
 - **restaurant cancel_order <restaurant_name> <client_name> <dish_name>**: Cancelar el pedido de un cliente antes de que sea servido.
 
 - **restaurant set_open_close <restaurant_name> <open/close>**: Abrir o cerrar el restaurante, siempre que no haya clientes dentro o reservas pendientes.
+
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+
+- **save_agents <file_path>**: Save agents to a `JSON` file.

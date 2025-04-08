@@ -24,3 +24,6 @@
 - **theater show_info <theater_name> <show_name>**: Mostrar información sobre un espectáculo específico en el teatro.
 - **client check_ticket_status <client_name> <theater_name> <show_name>**: Consultar el estado de un ticket para un espectáculo.
 - **client show_all_clients**: Mostrar la lista de todos los clientes en el sistema.
+
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+- **save_agents <file_path>**: Save agents to a `JSON` file.

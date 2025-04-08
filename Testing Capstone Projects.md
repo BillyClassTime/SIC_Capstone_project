@@ -3,7 +3,7 @@
 ## 1. Convert Jupyter notebook to tested file.
 
 ```powershell
-jupyter nbconvert --to script <jupyter_notebook_file_name>.ipynb	--output CitySimulation
+jupyter nbconvert --to script <jupyter_notebook_file_name>.ipynb --output CitySimulation
 ```
 
 ## 2. Prepare the test cases

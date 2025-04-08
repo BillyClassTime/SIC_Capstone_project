@@ -24,3 +24,5 @@
 - **client show_with_vehicle**: Mostrar clientes que poseen vehículos.
 - **client show_inside_vehicle**: Mostrar clientes actualmente dentro de un vehículo.
 - **vehicle random_breakdown <vehicle_name>**: Marcar aleatoriamente un vehículo vendido como descompuesto; el cliente no puede moverlo.
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+- **save_agents <file_path>**: Save agents to a `JSON` file.

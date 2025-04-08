@@ -29,3 +29,5 @@
 - **park show_ticket_sales <park_name>**: Mostrar las ventas de tickets en el parque
 - **park remove_ride <park_name> <ride_name>**: Eliminar una atracción del parque
 
+- **load_agents <file_path>**:  Load agents from a `JSON` file.
+- **save_agents <file_path>**: Save agents to a `JSON` file.

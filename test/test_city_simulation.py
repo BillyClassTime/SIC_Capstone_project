@@ -58,7 +58,7 @@ class TestCitySimulation(unittest.TestCase):
 
         # Cliente intenta salir de un ayuntamiento en el que no está
         self.run_command_and_assert('client exit_town_hall Billy Pinto', 
-                                    'Client Billy can not exit of town hall Pinto, because not in it')
+                                    'Client Billy cannot perform this action because not in it.')
 
         # Mostrar servicios y eliminar servicio
         self.run_command_and_assert('town_hall show_services Pinto', 'Services offered by Pinto:\n- Empadronar')
@@ -148,7 +148,7 @@ class TestCitySimulation(unittest.TestCase):
 
         # Ayuntamiento intenta eliminar un servicio inexistente
         self.run_command_and_assert('town_hall remove_service Pinto NonExistentService', 
-                                    "Service NonExistentService not found in Pinto.")
+                                    "Error: Service 'NonExistentService' not found in town hall 'Pinto'.")
 if __name__ == '__main__':
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestCitySimulation)
     unittest.TextTestRunner(verbosity=2).run(suite)
