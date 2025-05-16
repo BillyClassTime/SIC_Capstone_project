@@ -17,7 +17,7 @@
 - **client request_refund <client_name> <theater_name> <show_name>**: Solicitar un reembolso por un ticket comprado.
 - **theater remove_show <theater_name> <show_name>**: Eliminar un espectáculo del teatro, siempre que no haya clientes dentro.
 - **client check_wait_time <client_name> <theater_name>**: Consultar el tiempo de espera para entrar al teatro.
-- **theater show_all_clients**: Mostrar la lista de todos los clientes en el sistema.
+- **theater show_all_theater**: Mostrar la lista de todos los teatros en el sistema.
 - **client go_to_show <client_name> <theater_name> <show_name>**: Indicar que un cliente asiste a un espectáculo.
 - **client leave_show <client_name> <theater_name> <show_name>**: Indicar que un cliente sale de un espectáculo.
 - **theater show_current_shows <theater_name>**: Mostrar los espectáculos actuales en el teatro.
